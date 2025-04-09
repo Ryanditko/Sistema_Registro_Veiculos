@@ -7,4 +7,12 @@ from caminhao import Caminhao
 from dono import Dono
 from veiculo_registrado import Veiculo_Registrado
 from modelos import Base
-
+from tbbanco import Banco
+from tbcaminhao import Caminhao 
+from tbcarro import Carro
+from tbdono import Dono
+from tbpessoa import Pessoa
+from tbveiculo_registrado import Veiculo_Registrado
+from tbempresa import Empresa
+from tbpessoa import Pessoa
+from tbproprietario import Proprietario
