@@ -4,7 +4,7 @@ import os
 import logging
 from dotenv import load_dotenv
 from app.tests.etl_exceptions import ETLExceptionHandler
-from etl.etl import ETL
+from app.etl.etl import ETL
 
 load_dotenv()
 
