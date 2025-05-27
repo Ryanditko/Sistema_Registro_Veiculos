@@ -6,6 +6,8 @@ import logging
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError, OperationalError, DataError
 from datetime import datetime
 import traceback
+import json
+import os
 # %%
 # Configurando o logging
 logging.basicConfig(
@@ -34,6 +36,8 @@ class ETLExceptionHandler:
         - FileNotFoundError: Quando o arquivo fonte não é encontrado
         - EmptyDataError: Quando o arquivo está vazio ou não contém dados
         - ValueError: Quando há erro na leitura ou conversão dos dados
+        - PermissionError: Quando não há permissão para acessar o arquivo
+        - json.JSONDecodeError: Quando há erro na leitura de arquivos JSON
         - Exception: Para erros não previstos
         """
         def wrapper(*args, **kwargs):
@@ -49,6 +53,14 @@ class ETLExceptionHandler:
                 raise
             except ValueError as e:
                 logger.error(f"[EXTRACTION ERROR] Erro de leitura ou conversão de dados: {e}")
+                logger.error(traceback.format_exc())
+                raise
+            except PermissionError as e:
+                logger.error(f"[EXTRACTION ERROR] Erro de permissão ao acessar arquivo: {e}")
+                logger.error(traceback.format_exc())
+                raise
+            except json.JSONDecodeError as e:
+                logger.error(f"[EXTRACTION ERROR] Erro ao decodificar JSON: {e}")
                 logger.error(traceback.format_exc())
                 raise
             except Exception as e:
@@ -67,6 +79,8 @@ class ETLExceptionHandler:
         - ValueError: Quando há erro na conversão de tipos de dados
         - ParserError: Quando há erro no parsing dos dados
         - DtypeWarning: Avisos sobre incompatibilidade de tipos de dados
+        - TypeError: Quando há erro de tipo na operação
+        - AttributeError: Quando há erro ao acessar atributo
         - Exception: Para erros não previstos
         """
         def wrapper(*args, **kwargs):
@@ -87,6 +101,14 @@ class ETLExceptionHandler:
             except pd.errors.DtypeWarning as e:
                 logger.warning(f"[TRANSFORMATION WARNING] Aviso sobre tipo de dados: {e}")
                 return func(*args, **kwargs)
+            except TypeError as e:
+                logger.error(f"[TRANSFORMATION ERROR] Erro de tipo na operação: {e}")
+                logger.error(traceback.format_exc())
+                raise
+            except AttributeError as e:
+                logger.error(f"[TRANSFORMATION ERROR] Erro ao acessar atributo: {e}")
+                logger.error(traceback.format_exc())
+                raise
             except Exception as e:
                 logger.error(f"[TRANSFORMATION ERROR] Erro inesperado: {e}")
                 logger.error(traceback.format_exc())
@@ -103,6 +125,8 @@ class ETLExceptionHandler:
         - OperationalError: Quando há problemas na conexão com o banco
         - DataError: Quando há erro nos dados sendo inseridos
         - SQLAlchemyError: Para erros gerais do SQLAlchemy
+        - TimeoutError: Quando há timeout na conexão
+        - ConnectionError: Quando há erro de conexão
         - Exception: Para erros não previstos
         """
         def wrapper(*args, **kwargs):
@@ -122,6 +146,14 @@ class ETLExceptionHandler:
                 raise
             except SQLAlchemyError as e:
                 logger.error(f"[LOADING ERROR] Erro do SQLAlchemy: {e}")
+                logger.error(traceback.format_exc())
+                raise
+            except TimeoutError as e:
+                logger.error(f"[LOADING ERROR] Timeout na conexão com o banco: {e}")
+                logger.error(traceback.format_exc())
+                raise
+            except ConnectionError as e:
+                logger.error(f"[LOADING ERROR] Erro de conexão com o banco: {e}")
                 logger.error(traceback.format_exc())
                 raise
             except Exception as e:
