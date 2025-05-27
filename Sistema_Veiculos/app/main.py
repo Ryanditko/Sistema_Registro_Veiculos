@@ -3,7 +3,7 @@
 import os
 import logging
 from dotenv import load_dotenv
-from tests.exceptions import ETLExceptionHandler
+from app.tests.etl_exceptions import ETLExceptionHandler
 from etl.etl import ETL
 
 load_dotenv()

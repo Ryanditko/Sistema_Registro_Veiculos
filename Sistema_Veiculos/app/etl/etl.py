@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 
 from etl.abstract_etl import AbstractETL
-from tests.exceptions import ETLExceptionHandler
+from app.tests.etl_exceptions import ETLExceptionHandler
 from modelos.tb_proprietario import Proprietario
 from modelos.tb_veiculo_registrado import VeiculoRegistrado
 from modelos.tb_banco import Banco
