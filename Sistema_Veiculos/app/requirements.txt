@@ -1,0 +1,5 @@
+sqlalchemy==2.0.35
+alembic==1.13.3
+python-dotenv==1.0.0
+pandas==2.2.2
+pyodbc==5.2.0
